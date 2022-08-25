@@ -1,11 +1,9 @@
 package com.elo7.sonda.example.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "sonda")
 public class Sonda {
     public enum directions{
         N, S, E, W;
