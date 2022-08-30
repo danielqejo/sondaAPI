@@ -1,6 +1,7 @@
 package com.elo7.sonda.example.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "sonda")
@@ -77,5 +78,17 @@ public class Sonda {
 
     public void setOrientacao(directions orientacao) {
         this.orientacao = orientacao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Sonda sonda)) return false;
+        return getId().equals(sonda.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
