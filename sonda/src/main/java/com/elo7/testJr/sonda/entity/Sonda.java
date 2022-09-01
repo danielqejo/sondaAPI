@@ -1,4 +1,6 @@
-package com.elo7.sonda.example.entity;
+package com.elo7.testJr.sonda.entity;
+
+import com.elo7.testJr.campo.entity.Campo;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,8 +15,15 @@ public class Sonda {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private int posInicial;
-    private int posAtual;
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private Campo campo;
+
+    private int posInicialX;
+    private int posInicialY;
+    private int posAtualX;
+    private int posAtualY;
     private directions orientacao;
 
     /**
@@ -23,28 +32,29 @@ public class Sonda {
     @Deprecated
     Sonda() {}
 
-    public Sonda(Long id, int pos, directions orientacao) {
+    public Sonda(Long id, int[] pos, directions orientacao) {
         this.id = id;
         this.orientacao = orientacao;
-        this.posInicial = posInicial;
-        this.posInicial = pos;
-        this.posAtual = this.posInicial;
+        this.posInicialX = pos[0];
+        this.posAtualX = pos[0];
+        this.posInicialY = pos[1];
+        this.posAtualY = pos[1];
     }
 
     public void moveSonda(){
         switch (this.orientacao){
             case N:
-                this.posAtual += 1;
+                this.posAtualY += 1;
                 break;
             case S:
-                this.posAtual -= 1;
+                this.posAtualY -= 1;
                 break;
-//            case E:
-//                this.posAtual[0] -= 1;
-//                break;
-//            case W:
-//                this.posAtual[0] += 1;
-//                break;
+            case E:
+                this.posAtualX -= 1;
+                break;
+            case W:
+                this.posAtualX += 1;
+                break;
         }
     }
 
@@ -56,20 +66,22 @@ public class Sonda {
         this.id = id;
     }
 
-    public int getPosInicial() {
-        return posInicial;
+    public int[] getPosInicial() {
+        return new int[]{this.posInicialX, this.posInicialY};
     }
 
-    public void setPosInicial(int posInicial) {
-        this.posInicial = posInicial;
+    public void setPosInicial(int x, int y) {
+        this.posInicialX = x;
+        this.posInicialY = y;
     }
 
-    public int getPosAtual() {
-        return posAtual;
+    public int[] getPosAtual() {
+        return new int[]{this.posAtualX, this.posAtualY};
     }
 
-    public void setPosAtual(int posAtual) {
-        this.posAtual = posAtual;
+    public void setPosAtual(int x, int y) {
+        this.posAtualX = x;
+        this.posAtualY = y;
     }
 
     public directions getOrientacao() {
