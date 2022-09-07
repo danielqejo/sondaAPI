@@ -3,12 +3,14 @@ package com.elo7.testJr.campo.entity;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Entity
 @Table(name = "campo")
 public class Campo {
-
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column
     private Long id;
     private int largura;
     private int altura;
@@ -60,4 +62,5 @@ public class Campo {
     public int hashCode() {
         return Objects.hash(getId());
     }
+
 }

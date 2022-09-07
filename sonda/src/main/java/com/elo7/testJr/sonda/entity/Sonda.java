@@ -9,15 +9,24 @@ import java.util.Objects;
 @Table(name = "sonda")
 public class Sonda {
     public enum directions{
-        N, S, E, W;
-    };
+        N(1), E(2), S(3), W(4);
+
+        private final int value;
+        directions(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(nullable = false)
     private Campo campo;
 
     private int posInicialX;
@@ -25,6 +34,7 @@ public class Sonda {
     private int posAtualX;
     private int posAtualY;
     private directions orientacao;
+    private boolean estaAtivo;
 
     /**
      * @Deprecated - JPA Eyes
@@ -32,16 +42,18 @@ public class Sonda {
     @Deprecated
     Sonda() {}
 
-    public Sonda(Long id, int[] pos, directions orientacao) {
+    public Sonda(Long id, int[] pos, directions orientacao, Campo campo) {
         this.id = id;
         this.orientacao = orientacao;
         this.posInicialX = pos[0];
         this.posAtualX = pos[0];
         this.posInicialY = pos[1];
         this.posAtualY = pos[1];
+        this.campo = campo;
+        this.estaAtivo = true;
     }
 
-    public void moveSonda(){
+    public void movimenta(){
         switch (this.orientacao){
             case N:
                 this.posAtualY += 1;
@@ -57,6 +69,17 @@ public class Sonda {
                 break;
         }
     }
+
+    public void vira(int dir) {
+        directions[] values = directions.values();
+        int novaDirecao = this.orientacao.getValue() + dir - 1;
+
+        if(novaDirecao < 0) novaDirecao = 3;
+        else if(novaDirecao > 3) novaDirecao = 0;
+
+        this.orientacao = values[novaDirecao];
+    }
+
 
     public Long getId() {
         return id;
@@ -102,5 +125,9 @@ public class Sonda {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public Campo getCampo() {
+        return this.campo;
     }
 }

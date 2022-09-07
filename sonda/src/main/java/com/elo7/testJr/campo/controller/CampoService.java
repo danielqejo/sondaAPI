@@ -2,6 +2,8 @@ package com.elo7.testJr.campo.controller;
 
 import com.elo7.testJr.campo.entity.Campo;
 import com.elo7.testJr.campo.repository.CampoRepository;
+import com.elo7.testJr.sonda.entity.Sonda;
+import com.elo7.testJr.sonda.repository.SondaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +13,17 @@ import javax.transaction.Transactional;
 public class CampoService {
     @Autowired
     private CampoRepository campoRepository;
+    @Autowired
+    SondaRepository sondaRepository;
 
     @Transactional
     public Campo create(Campo campo) {
         return campoRepository.save(campo);
     }
 
-//    @Transactional
-//    @Query("UPDATE `test-sonda-db`.sonda SET posAtualX = ?posAtualX, posAtualY = ?posAtualY where id = ?id;")
-//    public void moveSonda(@Param("id") Long id, @Param("posAtualX") int x, @Param("posAtualY") int y) { }
-
-//    public Sonda getReferenceById(Long id) {
-//        return
-//    }
-
-//    public int[] getPosAtual(Long id) {
-//        Sonda sonda = sondaRepository.getReferenceById(id);
-//        sonda.moveSonda();
-//        return sonda.getPosAtual();
-//    }
+    @Transactional
+    public boolean aPosicaoEhValida(Long campoId, int x, int y){
+        return sondaRepository.existsValidPositon(campoId, x, y).isEmpty();
+    }
 
 }
