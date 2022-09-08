@@ -34,7 +34,7 @@ public class Sonda {
     private int posAtualX;
     private int posAtualY;
     private directions orientacao;
-    private boolean estaAtivo;
+    private Boolean estaAtivo;
 
     /**
      * @Deprecated - JPA Eyes
@@ -113,6 +113,14 @@ public class Sonda {
 
     public void setOrientacao(directions orientacao) {
         this.orientacao = orientacao;
+    }
+
+    public Boolean getEstaAtivo() {
+        return estaAtivo;
+    }
+
+    public void setEstaAtivo(Boolean estaAtivo) {
+        this.estaAtivo = estaAtivo;
     }
 
     @Override

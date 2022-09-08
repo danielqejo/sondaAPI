@@ -1,6 +1,8 @@
 package com.elo7.testJr.sonda.controller;
 
 import com.elo7.testJr.campo.entity.Campo;
+import com.elo7.testJr.sonda.SondaExceptions.SondaColidiuException;
+import com.elo7.testJr.sonda.SondaExceptions.SondaSaiuDoEspacoObservavelExceptions;
 import com.elo7.testJr.sonda.entity.Sonda;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +42,12 @@ public class SondaController {
             var sonda = sondaService.moveSonda(id);
 
             return ResponseEntity.ok(OutputSondaDto.from(sonda));
-        } catch (IllegalArgumentException e){
+        } catch (SondaColidiuException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A sonda colidiu!");
         } catch (ObjectNotFoundException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A sonda nao existe");
+        } catch (SondaSaiuDoEspacoObservavelExceptions e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(("A sonda saiu do espaco observavel"));
         }
     }
 
@@ -51,7 +55,13 @@ public class SondaController {
     private ResponseEntity<?> moveSonda(@PathVariable Long id, @PathVariable int direcao){
         if(direcao != -1 && direcao != 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Direcao invalida. Use -1 pra rotacao para esquerda e 1 para direita");
 
-        var sonda = sondaService.viraSonda(id, direcao);
+        Sonda sonda;
+
+        try{
+            sonda = sondaService.viraSonda(id, direcao);
+        } catch (ObjectNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(("A sonda nao existe!"));
+        }
 
         return ResponseEntity.ok(OutputSondaDto.from(sonda));
     }
